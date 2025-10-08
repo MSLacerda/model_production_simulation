@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulador de Produção</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div class="hero__content">
+          <span class="hero__badge">Simulação em tempo real</span>
+          <h1>Planeje sua produção com confiança</h1>
+          <p>
+            Explore cenários, ajuste parâmetros e visualize o impacto no seu
+            desempenho industrial com uma interface intuitiva e responsiva.
+          </p>
+        </div>
+        <div class="hero__panel">
+          <div class="hero__panel__metric">
+            <span class="label">Eficiência estimada</span>
+            <strong id="hero-efficiency">0%</strong>
+          </div>
+          <div class="hero__panel__metric">
+            <span class="label">Produção diária</span>
+            <strong id="hero-output">0 un</strong>
+          </div>
+          <div class="hero__panel__metric">
+            <span class="label">Tempo ocioso</span>
+            <strong id="hero-downtime">0 h</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="card card--inputs">
+          <h2>Configurações da linha</h2>
+          <form id="config-form" class="form-grid">
+            <label class="field">
+              <span>Capacidade nominal (un/h)</span>
+              <input
+                type="number"
+                id="capacity"
+                name="capacity"
+                min="10"
+                step="10"
+                value="180"
+                required
+              />
+            </label>
+            <label class="field">
+              <span>Duração do turno (h)</span>
+              <input
+                type="number"
+                id="shift-hours"
+                name="shiftHours"
+                min="4"
+                max="24"
+                step="1"
+                value="8"
+                required
+              />
+            </label>
+            <label class="field">
+              <span>Intervalos planejados (min)</span>
+              <input
+                type="number"
+                id="planned-downtime"
+                name="plannedDowntime"
+                min="0"
+                step="5"
+                value="40"
+              />
+            </label>
+            <label class="field">
+              <span>Probabilidade de parada não planejada (%)</span>
+              <input
+                type="number"
+                id="unplanned-probability"
+                name="unplannedProbability"
+                min="0"
+                max="100"
+                step="1"
+                value="25"
+              />
+            </label>
+            <label class="field">
+              <span>Qualidade média (%)</span>
+              <input
+                type="number"
+                id="quality-rate"
+                name="qualityRate"
+                min="50"
+                max="100"
+                step="1"
+                value="95"
+              />
+            </label>
+            <label class="field">
+              <span>Dias a simular</span>
+              <input
+                type="number"
+                id="days"
+                name="days"
+                min="1"
+                max="30"
+                value="7"
+              />
+            </label>
+            <label class="field">
+              <span>Número de turnos/dia</span>
+              <input
+                type="number"
+                id="shifts-per-day"
+                name="shiftsPerDay"
+                min="1"
+                max="4"
+                value="2"
+              />
+            </label>
+            <label class="field">
+              <span>Tempo médio de setup (min)</span>
+              <input
+                type="number"
+                id="setup-time"
+                name="setupTime"
+                min="0"
+                step="5"
+                value="30"
+              />
+            </label>
+            <div class="form-grid__actions">
+              <button type="button" id="simulate" class="button button--primary">
+                Simular produção
+              </button>
+              <button type="reset" id="reset" class="button button--ghost">
+                Redefinir
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card card--results">
+          <div class="results-header">
+            <h2>Resumo dos resultados</h2>
+            <div class="chips">
+              <span class="chip" id="chip-utilization">Utilização 0%</span>
+              <span class="chip" id="chip-oee">OEE 0%</span>
+              <span class="chip" id="chip-throughput">Fluxo 0 un/h</span>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <article class="stat">
+              <h3>Produção média diária</h3>
+              <p id="avg-daily-output">0 unidades</p>
+            </article>
+            <article class="stat">
+              <h3>Tempo ocioso total</h3>
+              <p id="total-downtime">0 horas</p>
+            </article>
+            <article class="stat">
+              <h3>Sucata gerada</h3>
+              <p id="scrap-amount">0 unidades</p>
+            </article>
+            <article class="stat">
+              <h3>Produtividade por turno</h3>
+              <p id="per-shift-output">0 unidades</p>
+            </article>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card__header">
+              <h3>Volume produzido por dia</h3>
+              <span class="chart-card__tag" id="chart-tag">Últimos 7 dias</span>
+            </div>
+            <canvas id="production-chart" height="220"></canvas>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
